@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+<p> This is the body.</p>
+
+<ol>
+{% for book in all_books %}
+	<li> {{ book.name }} </li>
+{% end %}
+</ol>
+
+Add a book:
+<form name="newbook" action="/" method="post">
+	<input type="text" name="book_name" id="text" />
+	<input type="submit" value="submit" />
+</form>
+
+{% end %}
