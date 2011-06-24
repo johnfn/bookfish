@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 from __future__ import division
 
 import os
+import sys
 
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
@@ -80,34 +83,30 @@ class DBWrapper:
 		session.commit()
 
 if __name__ == "__main__":
-	"""Run a loop to do some simple database commands"""
-
 	db = DBWrapper()
 
-	def get_command():
-		print "Commands:" 
-		print "[D]rop all tables"
-		print "[P]opulate database"
-		print "[I]nspect database"
-		print "[Q]uit"
-		print
+	if len(sys.argv) == 1:
+		print "Usage: "
+		print "./db.py [-options]"
+		print 
+		print "Options:"
+		print "  -p : Populate database with data"
+		print "  -i : Inspect database"
+		print "  -d : Drop all tables"
+		print 
+	
+	for arg in sys.argv[1:]:
+		command = arg.upper()
+		if command[0] == "-": command = command[1:]
 
-		return raw_input()
-
-	while True:
-		command = get_command().upper()
-
-		if command == "Q":
-			print "Quit"
-			break
-		elif command == "P":
+		if command == "P":
 			print "Populating database...",
 			db.populate()
 			print "Done"
 		elif command == "I":
 			db.inspect()
 		elif command == "D":
-			print "Drop all tables. Are you sure? n/Y"
+			print "Drop all tables. Are you sure? Y/n"
 			result = raw_input()
 			if result == "Y":
 				db.destroy()
