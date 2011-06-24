@@ -18,11 +18,11 @@ Base = declarative_base()
 class Book(Base):
 	__tablename__ = "books"
 
-	id = Column(Integer, primary_key = True)
-	name = Column(String)
-	stars = Column(Integer)
-	votes = Column(Integer)
-	rating = Column(Float)
+	id = Column(Integer, primary_key = True) # Primary ID
+	name = Column(String)   # Name of book
+	stars = Column(Integer) # Sum of all votes
+	votes = Column(Integer) # Total number of voters
+	rating = Column(Float)  # Average rating
 
 	def __init__(self, name):
 		self.name = name
