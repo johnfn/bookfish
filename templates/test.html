@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>{% block title %}{% end %}Bookfish</title>
+	<title>Bookfish</title>
+	<link rel="stylesheet" href="css/page.css" type="text/css" media="screen"/>
 	<meta charset="utf-8"/>
-	<link rel="stylesheet" href="{{ static_url("css/page.css") }}" type="text/css" media="screen"/>
-	{% block head %}{% end %}
 </head>
 <body>
 	<div id="nav">
 		<div class="wrapper clearfix">
-			<div class="logo"><a href="/">Bookfish</a></div>
+			<div class="logo">Bookfish</div>
 			<ul class="nav-list">
-				<li><a class="rounded-corners" href="/">Home</a></li>
-				{% if current_user %}
+				<li><strong>Home</strong></li>
 				<li><a class="rounded-corners" href="/fishing">Your recommendations</a></li>
-				{% end %}
 				<li><a class="rounded-corners" href="/top-10">Top 10 books</a></li>
-				{% if current_user %}
+				<li><a class="rounded-corners" href="/login">Log in</a></li>
 				<li><a class="rounded-corners" href="/logout">Log out?</a></li>
 				<li>Hello, David.</li>
-				{% else %}
-				<li><a class="rounded-corners" href="/login">Log in</a></li>
-				{% end %}
 			</ul>
 		</div>
 	</div>
-	{% block content %}{% end %}
+	<div id="content" class="pop-out">
+		<div class="wrapper home">
+			<h1>Rate books <span class="amp">&amp;</span> get book recommendations.</h1>
+			<p>Bookfish makes it that easy.</p>
+			<p class="wide-margin"><a class="fancy-button rounded-corners half-width center-block" href="signup/">Get started!</a></p>
+		</div>
+	</div>
 	<div id="footer">
 		<div class="wrapper thirds clearfix">
 			<div class="third">
@@ -37,11 +37,11 @@
 				</ul>
 			</div>
 			<div class="third">
-				<h4>Recent History</h4>
+				<h4>Stuff</h4>
 				<ul>
-					<li>Rated 3/5 on Harry Potter and the Deathly Hallows</li>
-					<li>Commented on a review of Harry Potter and the Herply Derply</li>
-					<li>Reviewed Harry Potter and the Deathly Hallows</li>
+					<li>Recent history</li>
+					<li>Similar items</li>
+					<li>"Get to know us" == PR/jobs?</li>
 				</ul>
 			</div>
 			<div class="third last">
