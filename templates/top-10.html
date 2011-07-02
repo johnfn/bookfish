@@ -5,16 +5,9 @@
 	<div class="wrapper">
 		<h1>Top 10 books</h1>
 		<ol class="big-list">
-			<li><img class="left" src="http://ecx.images-amazon.com/images/I/51ynI7I-qnL._AA115_.jpg"/><h2><a href="">Herple Pottle</a></h2>J.K. Rowling <a href="/labels/bestseller" class="label rounded-corners">Bestseller</a></li>
-			<li><h2><a href="">Blarf</a></h2></li>
-			<li><h2><a href="">Derp</a></h2></li>
-			<li><h2><a href="">Derple</a></h2></li>
-			<li><h2><a href="">Herple</a></h2></li>
-			<li><h2><a href="">Darple</a></h2></li>
-			<li><h2><a href="">Darple</a></h2></li>
-			<li><h2><a href="">Darple</a></h2></li>
-			<li><h2><a href="">Darple</a></h2></li>
-			<li><h2><a href="">Darple</a></h2></li>
+      {% for book in top_ten_books %}
+        {% include "book_in_list.html" %}
+      {% end %}
 		</ol>
 	</div>
 </div>

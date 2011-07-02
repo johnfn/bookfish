@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block nonexistant %}
 <p> This is the body.</p>
 
 <ol>
@@ -21,8 +21,12 @@ Add a book:
 <div id="content" class="pop-out">
 	<div class="wrapper home">
 		<h1>Rate books <span class="amp">&amp;</span> get book recommendations.</h1>
-		<p>Bookfish makes it that easy.</p>
-		<p class="wide-margin"><a class="fancy-button rounded-corners half-width center-block" href="signup/">Get started!</a></p>
+		<form method="post" action="signup/" name="new_user_form">
+			<!-- <p>Bookfish makes it that easy.</p> -->
+			<p> <label for="username">Name:</label> <input id="username" class="in-form">	</p>
+			<p> <label for="password">Password:</label> <input type="password" class="in-form" id="password"> </p>
+			<p class="wide-margin"><a class="fancy-button rounded-corners half-width center-block" href="#" onclick="document.new_user_form.submit()">Get started!</a></p>
+		</form>
 	</div>
 </div>
 {% end %}
