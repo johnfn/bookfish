@@ -30,7 +30,7 @@ class Book(Base):
     self.stars = 0
     self.votes = 0
     self.rating = 0.0
-    self.author = author
+    self.author = authoro
 
   def get_url(self):
     return "/book/%d" % (self.id)
@@ -42,6 +42,18 @@ class Book(Base):
   
   def __repr__(self):
     return "%s \n\t[%d stars, %d votes, %f average rating]" % (self.name, self.stars, self.votes, self.rating)
+
+class User(Base):
+  __tablename__ = "users"
+
+  id = Column(Integer, primary_key = True)
+  full_name = Column(String)
+
+  def __init__(self, name):
+    self.full_name = name
+
+  def __repr__(self):
+    return "User %s" % self.full_name
 
 """
 DB wrapper helper class
@@ -67,8 +79,13 @@ class DBWrapper:
 
   def inspect(self):
     session = self.get_session()
-    for book in session.query(Book).order_by(Book.id):
-      print book
+
+    for subclass in Base.__subclasses__():
+      print subclass.__name__ + "s"
+      for item in session.query(subclass):
+        print item
+
+      print ""
 
   def destroy(self):
     os.unlink(self.DB_NAME)
