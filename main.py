@@ -28,8 +28,9 @@ class BaseHandler(tornado.web.RequestHandler):
     if user_db.count() == 0:
       sess.add(User(user_object['name']))
       sess.commit()
+      user_db = sess.query(User).filter(User.full_name == user_object['name'])
 
-    return tornado.escape.json_decode(user_json)
+    return user_db
 
 class MainHandler(BaseHandler):
   def get(self):
@@ -72,8 +73,20 @@ class BookDetailHandler(tornado.web.RequestHandler):
     sess = db.get_session()
     book = sess.query(Book).filter(Book.id == book_id).one()
 
-
     self.render("book_detail.html", book = book)
+
+class BookRatingHandler(tornado.web.RequestHandler):
+  def get(self, book_id, rating):
+    rating = float(rating)
+    if not 0 <= rating <= 5:
+      raise #TODO: More robust errors than just crashing.
+
+    print "Rating book %s %s" % (book_id, rating)
+
+    user = self.get_current_user()
+    if not user:
+      raise #TODO: Again...
+      #TODO: Stuff like this is great for testing.
 
 
 class Application(tornado.web.Application):
@@ -84,6 +97,7 @@ class Application(tornado.web.Application):
                 , (r"/top-10", TopTenHandler)
                 , (r"/book/([\d]+)", BookDetailHandler)
                 , (r"/login", AuthLoginHandler)
+                , (r'/book/([\d]+)/rate/([\d\.]+)', BookRatingHandler)
                 ]
 
     handlers.extend(admin.get_handlers('admin'))

@@ -30,10 +30,13 @@ class Book(Base):
     self.stars = 0
     self.votes = 0
     self.rating = 0.0
-    self.author = authoro
+    self.author = author
 
   def get_url(self):
     return "/book/%d" % (self.id)
+
+  def get_rating_url(self, score):
+    return "/book/%d/rate/%s" % (self.id, score)
 
   def add_rating(self, score):
     self.stars += vote
@@ -53,7 +56,36 @@ class User(Base):
     self.full_name = name
 
   def __repr__(self):
-    return "User %s" % self.full_name
+    return "%s" % self.full_name
+
+class Rating(Base):
+  """A user gives a rating (0.0 to 5.0, in 0.5 increments) to a book."""
+  __tablename__ = "ratings"
+
+  id = Column(Integer, primary_key = True)
+  value = Column(Float)
+  creator = Column(Integer, ForeignKey('users.id'))
+  book = Column(Integer, ForeignKey('books.id'))
+
+  def __init__(self, value, creator, book):
+    self.value = value
+    self.creator = creator
+    self.book = book
+
+  def nice_repr(self, session):
+    """A human readable representation of the Rating. We separate nice_repr and
+    __repr because we may not want to keep hitting the db when we
+    querying for __repr__."""
+    
+    creator_db = session.query(User).filter(User.id == self.creator).one()
+    book_db = session.query(Book).filter(Book.id == self.book).one()
+
+    return "User %s rated book %s a %f" % \
+      (creator_db.full_name, book_db.name, self.value)
+    print "Created by %s" % creator_db.full_name
+
+  def __repr__(self):
+    return "User %d rated book %d a %d." % (self.creator, self.book, self.value)
 
 """
 DB wrapper helper class
@@ -83,7 +115,10 @@ class DBWrapper:
     for subclass in Base.__subclasses__():
       print subclass.__name__ + "s"
       for item in session.query(subclass):
-        print item
+        if "nice_repr" in dir(item):
+          print item.nice_repr(session)
+        else:
+          print item
 
       print ""
 
@@ -92,13 +127,33 @@ class DBWrapper:
 
   def populate(self):
     """ Insert some stuff into the database """
+
+    def make_test_data(session, model_type, args_array):
+      """ Helper method for creating many testing models on the fly. """
+      new_data = [ model_type(*args) for args in args_array ]
+
+      for item in new_data: session.add(item)
+      session.commit()
+
+      return new_data
+
     session = self.get_session()
 
-    session.add(Book("Harry Potter and the Chamber of Derp", "J. K. Lol"))
-    session.add(Book("Harry Potter and the Goblet of Herp", "J. K. Lol"))
+    new_users = make_test_data(session, User, 
+      [ ("Herp Derper",) # (Trailing comma required to distinguish tuple)
+      , ("Derpina Tester",)
+      ])
 
-    session.commit()
-  
+    new_books = make_test_data(session, Book,
+      [ ("Harry Potter and the Chamber of Derp", "J. K. Lol")
+      , ("Harry Potter and the Goblet of Herp", "J. K. Lol")
+      ])
+
+    new_ratings = make_test_data(session, Rating,
+      [ (4.5, new_users[0].id, new_books[0].id)
+      , (2.5, new_users[0].id, new_books[1].id)
+      ])
+
   def add_book(self, book_name):
     session = self.get_session()
     session.add(Book(book_name))
@@ -109,7 +164,7 @@ if __name__ == "__main__":
 
   if len(sys.argv) == 1:
     print "Usage: "
-    print "./db.py [-options]"
+    print "./db.py [-option]"
     print 
     print "Options:"
     print "  -p : Populate database with data"
@@ -123,7 +178,11 @@ if __name__ == "__main__":
 
     if command == "P":
       print "Populating database...",
-      db.populate()
+      try:
+        db.populate()
+      except:
+        print "Failed populating database. I recommend deleting all data and trying again."
+        exit(0)
       print "Done"
     elif command == "I":
       db.inspect()
