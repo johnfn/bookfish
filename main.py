@@ -30,7 +30,7 @@ class BaseHandler(tornado.web.RequestHandler):
       sess.commit()
       user_db = sess.query(User).filter(User.full_name == user_object['name'])
 
-    return user_db
+    return user_db.one()
 
 class MainHandler(BaseHandler):
   def get(self):
@@ -38,7 +38,7 @@ class MainHandler(BaseHandler):
 
     sess = db.get_session()
     all_books = [b for b in sess.query(Book)]
-
+    
     self.render("index.html", all_books = all_books)
 
   def post(self):

@@ -18,7 +18,7 @@
 				<li><a class="rounded-corners" href="/top-10">Top 10 books</a></li>
 				{% if current_user %}
 				<li><a class="rounded-corners" href="/logout">Log out?</a></li>
-				<li>Hello, {{ current_user['first_name'] }}.</li>
+				<li>Hello, {{ current_user }}.</li>
 				{% else %}
 				<li><a class="rounded-corners" href="/login">Log in</a></li>
 				{% end %}
