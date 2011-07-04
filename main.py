@@ -7,7 +7,7 @@ import tornado.httpserver
 import tornado.web
 import tornado.auth
 
-from db import DBWrapper, Book, User
+from models import DBWrapper, Book, User
 from admin import Admin
 
 PORT = 8888
