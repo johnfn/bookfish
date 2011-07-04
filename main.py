@@ -7,8 +7,9 @@ import tornado.httpserver
 import tornado.web
 import tornado.auth
 
-from models import DBWrapper, Book, User
+from models import Book, User, Base
 from admin import Admin
+from util import Util
 
 PORT = 8888
 
@@ -22,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     # Add the user to the db if he isn't in there already.
 
-    sess = db.get_session()
+    sess = smaker()
     user_db = sess.query(User).filter(User.full_name == user_object['name'])
 
     if user_db.count() == 0:
@@ -36,15 +37,20 @@ class MainHandler(BaseHandler):
   def get(self):
     if self.get_current_user():
       self.redirect("/you")
+      return
 
-    sess = db.get_session()
+    sess = smaker()
     all_books = [b for b in sess.query(Book)]
     
     self.render("index.html", all_books = all_books)
 
   def post(self):
     new_book = self.get_argument("book_name")
-    db.add_book(new_book)
+
+    session = smaker()
+    session.add(Book(book_name))
+    session.commit()
+
     self.redirect("/")
 
 class ProfileHandler(BaseHandler):
@@ -73,13 +79,13 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
 
 class TopTenHandler(tornado.web.RequestHandler):
   def get(self):
-    sess = db.get_session()
+    sess = smaker()
     top_ten_books = sess.query(Book).order_by(Book.rating)[:10]
     self.render("top-10.html", top_ten_books = top_ten_books)
 
 class BookDetailHandler(tornado.web.RequestHandler):
   def get(self, book_id):
-    sess = db.get_session()
+    sess = smaker()
     book = sess.query(Book).filter(Book.id == book_id).one()
 
 
@@ -121,8 +127,11 @@ class Application(tornado.web.Application):
       static_path = os.path.join(os.path.dirname(__file__), "public"),
     )
 
-    global db
-    db = DBWrapper() #initialize DB
+    #global db
+    #db = DBWrapper() #initialize DB
+
+    global smaker
+    smaker = Util.make_sessionmaker(Base)
 
     tornado.web.Application.__init__(self, handlers, **settings)
 

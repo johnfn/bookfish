@@ -1,0 +1,5 @@
+Noteable scripts
+
+db_shell: Nice utility scripts for managing the database.
+
+run: Run the webserver locally.

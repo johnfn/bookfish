@@ -7,7 +7,10 @@ import os
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
 from models import *
+from settings import *
+from util import *
 
 if __name__ == '__main__':
   print "Don't run this file. Instead, run ./db_shell ."
@@ -21,19 +24,8 @@ DB wrapper helper class
 """
 
 class DBShell:
-  def __init__(self, in_memory = False):
-    self.__DB_NAME = "db"
-    if in_memory: 
-      self.__db = create_engine('sqlite:///:memory:') #create in memory database
-    else:
-      self.__db = create_engine('sqlite:///%s' % self.__DB_NAME)
-
-    self.__db.echo = False #Don't spam SQL to console
-
-    Base.metadata.bind = self.__db
-    Base.metadata.create_all(self.__db) #Create all tables
-
-    self.Session = sessionmaker(bind = self.__db) #Session object type
+  def __init__(self):
+    self.Session = Util.make_sessionmaker(Base)
 
   def __get_session(self):
     return self.Session()
