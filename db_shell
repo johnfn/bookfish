@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python -i -c "from db_shell import *;"

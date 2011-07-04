@@ -34,7 +34,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
   def get(self):
-    print self.get_current_user()
+    if self.get_current_user():
+      self.redirect("/you")
 
     sess = db.get_session()
     all_books = [b for b in sess.query(Book)]
@@ -45,6 +46,14 @@ class MainHandler(BaseHandler):
     new_book = self.get_argument("book_name")
     db.add_book(new_book)
     self.redirect("/")
+
+class ProfileHandler(BaseHandler):
+  def get(self):
+    # TODO: if self.is_authenticated()
+    if not self.get_current_user():
+      self.redirect("/")
+
+    self.render("profile.html")
 
 class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
   @tornado.web.asynchronous
@@ -94,6 +103,7 @@ class Application(tornado.web.Application):
     admin = Admin()
 
     handlers  = [ (r"/", MainHandler)
+                , (r"/you", ProfileHandler)
                 , (r"/top-10", TopTenHandler)
                 , (r"/book/([\d]+)", BookDetailHandler)
                 , (r"/login", AuthLoginHandler)
