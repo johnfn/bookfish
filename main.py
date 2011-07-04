@@ -82,6 +82,7 @@ class BookDetailHandler(tornado.web.RequestHandler):
     sess = db.get_session()
     book = sess.query(Book).filter(Book.id == book_id).one()
 
+
     self.render("book_detail.html", book = book)
 
 class BookRatingHandler(tornado.web.RequestHandler):

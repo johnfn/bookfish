@@ -32,7 +32,7 @@ class Book(Base):
     self.stars = 0
     self.votes = 0
     self.rating = 0.0
-    self.author = author
+    self.author = authoro
 
   def get_url(self):
     return "/book/%d" % (self.id)
