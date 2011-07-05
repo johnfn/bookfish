@@ -7,7 +7,7 @@ import tornado.httpserver
 import tornado.web
 import tornado.auth
 
-from models import Book, User, Base
+from models import *
 from admin import Admin
 from util import Util
 
@@ -54,12 +54,25 @@ class MainHandler(BaseHandler):
     self.redirect("/")
 
 class ProfileHandler(BaseHandler):
-  def get(self):
+  def get(self, id = None):
     # TODO: if self.is_authenticated()
-    if not self.get_current_user():
+    if id is None and not self.get_current_user():
       self.redirect("/")
+      return
 
-    self.render("profile.html")
+    session = smaker()
+
+    your_profile = (id == None)
+
+    if your_profile:
+      id = self.get_current_user().id
+      profile_user = self.get_current_user()
+    else:
+      profile_user = session.query(User).filter(User.id == id).one()
+
+    ratings = session.query(Rating).filter(Rating.creator == id)[:10]
+
+    self.render("profile.html", ratings = ratings, your_profile = your_profile, profile_user = profile_user)
 
 class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
   @tornado.web.asynchronous
@@ -111,6 +124,7 @@ class Application(tornado.web.Application):
 
     handlers  = [ (r"/", MainHandler)
                 , (r"/you", ProfileHandler)
+                , (r"/user/([\d]+)", ProfileHandler)
                 , (r"/top-10", TopTenHandler)
                 , (r"/book/([\d]+)", BookDetailHandler)
                 , (r"/login", AuthLoginHandler)

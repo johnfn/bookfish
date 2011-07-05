@@ -8,7 +8,7 @@ import os
 import sys
 
 from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 """
@@ -39,7 +39,7 @@ class Book(Base):
 
   def get_rating_url(self, score):
     return "/book/%d/rate/%s" % (self.id, score)
-
+  
   def add_rating(self, score):
     self.stars += vote
     self.votes += 1
@@ -71,11 +71,13 @@ class Rating(Base):
   value = Column(Float)
   creator = Column(Integer, ForeignKey('users.id'))
   book = Column(Integer, ForeignKey('books.id'))
+  book_name = Column(String)
 
-  def __init__(self, value, creator, book):
+  def __init__(self, session, value, creator, book):
     self.value = value
     self.creator = creator
     self.book = book
+    self.book_name = session.query(Book).filter(Book.id == book).one().name
 
   def nice_repr(self, session):
     """A human readable representation of the Rating. We separate nice_repr and

@@ -41,8 +41,9 @@ class DBShell:
     for subclass in Base.__subclasses__():
       if inspect_class != None and subclass != inspect_class: continue
       print subclass.__name__
-      for item in session.query(subclass):
+      for item in session.query(subclass).order_by(subclass.id):
         if id != None and item.id != id: continue
+        print "[%d]" % item.id,
         if "nice_repr" in dir(item):
           print item.nice_repr(session)
         else:
@@ -56,10 +57,17 @@ class DBShell:
     print "Destroy the database. Are you sure? Y/n"
     result = raw_input()
     if result == "Y":
-      os.unlink(self.__DB_NAME)
+      os.unlink(Settings.db_name)
       print "Database destroyed."
     else:
       print "Database not destroyed."
+
+  def get(self, obj_type, obj_id):
+    """(obj_type, obj_id)
+    Gets the unique object with specified id and type."""
+    session = self.__get_session()
+
+    return session.query(obj_type).filter(obj_type.id == obj_id).one()
 
   def populate(self):
     """()
@@ -91,8 +99,8 @@ class DBShell:
       ])
 
     new_ratings = make_test_data(session, Rating,
-      [ (4.5, new_users[0].id, new_books[0].id)
-      , (2.5, new_users[0].id, new_books[1].id)
+      [ (session, 4.5, new_users[0].id, new_books[0].id)
+      , (session, 2.5, new_users[0].id, new_books[1].id)
       ])
 
   # TODO: Take this out of here.
