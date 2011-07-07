@@ -34,6 +34,10 @@ class Book(Base):
     self.rating = 0.0
     self.author = author
 
+  # Assume that someone is going to call commit afterwards...
+  def calculate_rating(self):
+    self.rating = self.stars / self.votes
+
   def get_url(self):
     return "/book/%d" % (self.id)
 
@@ -74,20 +78,27 @@ class Rating(Base):
   book_name = Column(String)
 
   def __init__(self, session, value, creator, book):
+    book_db = session.query(Book).filter(Book.id == book).one()
 
     # Check to see if user has rated this book already.
     old_rating = session.query(Rating).filter(Rating.creator == creator).filter(Rating.book == book)
 
     if old_rating.count() > 0:
       old_rating = old_rating.one()
+      book_db.stars -= old_rating.value
       old_rating.value = value
+      book_db.stars += value
+      book_db.calculate_rating()
       session.commit()
       return
 
     self.value = value
     self.creator = creator
     self.book = book
-    self.book_name = session.query(Book).filter(Book.id == book).one().name
+    book_db.stars += value
+    book_db.votes += 1
+    book_db.calculate_rating()
+    self.book_name = book_db.name
 
   def nice_repr(self, session):
     """A human readable representation of the Rating. We separate nice_repr and
