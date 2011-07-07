@@ -74,6 +74,16 @@ class Rating(Base):
   book_name = Column(String)
 
   def __init__(self, session, value, creator, book):
+
+    # Check to see if user has rated this book already.
+    old_rating = session.query(Rating).filter(Rating.creator == creator).filter(Rating.book == book)
+
+    if old_rating.count() > 0:
+      old_rating = old_rating.one()
+      old_rating.value = value
+      session.commit()
+      return
+
     self.value = value
     self.creator = creator
     self.book = book

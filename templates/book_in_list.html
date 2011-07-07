@@ -5,7 +5,7 @@
   <h2><a href="{{ book.get_url() }}">{{ book.name }}</a></h2> {{ book.rating }}/5 by {{ book.author }}. 
   
   Rate: 
-  {% for x in [y / 2.0 for y in range(0, 10)] %}
+  {% for x in [y / 2.0 for y in range(0, 11)] %}
     <a href="{{ book.get_rating_url(x) }}">{{ x }}</a>
   {% end %}
 </li>

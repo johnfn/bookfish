@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2> Browsing books. </h2>
+
+  {% for book in books %}
+    {% include "book_in_list.html" %}
+  {% end %}
+{% end %}

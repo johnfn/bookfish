@@ -3,6 +3,7 @@
 <head>
 	<title>{% block title %}{% end %}Bookfish</title>
 	<meta charset="utf-8"/>
+  <script src="{{ static_url("js/live.js") }}"> </script>
 	<link rel="stylesheet" href="{{ static_url("css/page.css") }}" type="text/css" media="screen"/>
 	{% block head %}{% end %}
 </head>
@@ -13,7 +14,7 @@
 			<ul class="nav-list">
 				<li><a class="rounded-corners" href="/">Home</a></li>
 				{% if current_user %}
-				<li><a class="rounded-corners" href="/fishing">Your recommendations</a></li>
+				<li><a class="rounded-corners" href="/browse-books">Browse books</a></li>
 				{% end %}
 				<li><a class="rounded-corners" href="/top-10">Top 10 books</a></li>
 				{% if current_user %}

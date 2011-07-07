@@ -18,7 +18,9 @@ db = None
 class BaseHandler(tornado.web.RequestHandler):
   def get_current_user(self):
     user_json = self.get_secure_cookie("user")
-    if not user_json: return None
+    if not user_json: 
+      return None
+
     user_object = tornado.escape.json_decode(user_json)
 
     # Add the user to the db if he isn't in there already.
@@ -52,6 +54,13 @@ class MainHandler(BaseHandler):
     session.commit()
 
     self.redirect("/")
+
+class BrowseHandler(BaseHandler):
+  def get(self):
+    session = smaker()
+
+    books = session.query(Book)
+    self.render("browse-books.html", books = books)
 
 class ProfileHandler(BaseHandler):
   def get(self, id = None):
@@ -90,21 +99,20 @@ class AuthLoginHandler(BaseHandler, tornado.auth.GoogleMixin):
     self.redirect("/")
 
 
-class TopTenHandler(tornado.web.RequestHandler):
+class TopTenHandler(BaseHandler):
   def get(self):
     sess = smaker()
     top_ten_books = sess.query(Book).order_by(Book.rating)[:10]
     self.render("top-10.html", top_ten_books = top_ten_books)
 
-class BookDetailHandler(tornado.web.RequestHandler):
+class BookDetailHandler(BaseHandler):
   def get(self, book_id):
     sess = smaker()
     book = sess.query(Book).filter(Book.id == book_id).one()
 
-
     self.render("book_detail.html", book = book)
 
-class BookRatingHandler(tornado.web.RequestHandler):
+class BookRatingHandler(BaseHandler):
   def get(self, book_id, rating):
     rating = float(rating)
     if not 0 <= rating <= 5:
@@ -117,12 +125,19 @@ class BookRatingHandler(tornado.web.RequestHandler):
       raise #TODO: Again...
       #TODO: Stuff like this is great for testing.
 
+    session = smaker()
+    session.add(Rating(session, rating, user.id, book_id))
+    session.commit()
+    
+    #TODO: redirect to same page?
+    self.redirect("/you")
 
 class Application(tornado.web.Application):
   def __init__(self):
     admin = Admin()
 
     handlers  = [ (r"/", MainHandler)
+                , (r"/browse-books", BrowseHandler)
                 , (r"/you", ProfileHandler)
                 , (r"/user/([\d]+)", ProfileHandler)
                 , (r"/top-10", TopTenHandler)
