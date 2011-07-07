@@ -2,4 +2,4 @@
 
 # This file is guaranteed to always get the server up and running/
 
-python supervisor.py main.py
+python main.py

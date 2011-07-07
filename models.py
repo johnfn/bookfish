@@ -8,7 +8,7 @@ import os
 import sys
 
 from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 """
@@ -26,6 +26,7 @@ class Book(Base):
   votes = Column(Integer) # Total number of voters
   rating = Column(Float)  # Average rating
   author = Column(String) # Author
+  ratings = relationship("Rating", backref='book_obj') #TODO
 
   def __init__(self, name, author):
     self.name = name
@@ -57,6 +58,7 @@ class User(Base):
 
   id = Column(Integer, primary_key = True)
   full_name = Column(String)
+  ratings = relationship("Rating", backref='user')
 
   def __init__(self, name):
     self.full_name = name
@@ -71,6 +73,7 @@ class Rating(Base):
   """A user gives a rating (0.0 to 5.0, in 0.5 increments) to a book."""
   __tablename__ = "ratings"
 
+  #TODO: Poor naming scheme. Should be creator_id, creator; similarly with book.
   id = Column(Integer, primary_key = True)
   value = Column(Float)
   creator = Column(Integer, ForeignKey('users.id'))

@@ -16,6 +16,9 @@ if __name__ == '__main__':
   print "Don't run this file. Instead, run ./db_shell ."
   exit(0)
 
+def make_bold(s):
+  return "\033[1m" + s + "\033[0;0m"
+
 print "This is the database shell."
 print "For a list of all commands, type 'commands()'"
 
@@ -58,7 +61,7 @@ class DBShell:
     result = raw_input()
     if result == "Y":
       os.unlink(Settings.db_name)
-      print "Database destroyed."
+      print "Database destroyed. It is %s to restart the database shell." % make_bold("highly recommended")
     else:
       print "Database not destroyed."
 
@@ -116,9 +119,6 @@ help_text = ""
 
 # Get all public methods of DBShell
 methods = [f for f in dir(DBShell) if "__" not in f] 
-
-def make_bold(s):
-  return "\033[1m" + s + "\033[0;0m"
 
 # Add all public methods to globals for shell convenience.
 for method in methods:

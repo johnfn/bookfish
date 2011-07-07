@@ -150,6 +150,7 @@ class Application(tornado.web.Application):
 
     # TODO: Change cookie_secret
     settings = dict(
+      debug=True,
       cookie_secret="43oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
       login_url="/auth/login",
       template_path = os.path.join(os.path.dirname(__file__), "templates"),
