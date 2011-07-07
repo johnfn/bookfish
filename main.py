@@ -79,7 +79,7 @@ class ProfileHandler(BaseHandler):
     else:
       profile_user = session.query(User).filter(User.id == id).one()
 
-    ratings = session.query(Rating).filter(Rating.creator == id)[:10]
+    ratings = session.query(Rating).filter(Rating.creator_id == id)[:10]
 
     self.render("profile.html", ratings = ratings, your_profile = your_profile, profile_user = profile_user)
 
@@ -126,7 +126,7 @@ class BookRatingHandler(BaseHandler):
       #TODO: Stuff like this is great for testing.
 
     session = smaker()
-    session.add(Rating(session, rating, user.id, book_id))
+    session.add(Rating(session, rating, user.id, int(book_id)))
     session.commit()
     
     #TODO: redirect to same page?

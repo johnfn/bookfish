@@ -26,7 +26,7 @@ class Book(Base):
   votes = Column(Integer) # Total number of voters
   rating = Column(Float)  # Average rating
   author = Column(String) # Author
-  ratings = relationship("Rating", backref='book_obj') #TODO
+  ratings = relationship("Rating", backref='book') #TODO
 
   def __init__(self, name, author):
     self.name = name
@@ -73,18 +73,17 @@ class Rating(Base):
   """A user gives a rating (0.0 to 5.0, in 0.5 increments) to a book."""
   __tablename__ = "ratings"
 
-  #TODO: Poor naming scheme. Should be creator_id, creator; similarly with book.
   id = Column(Integer, primary_key = True)
   value = Column(Float)
-  creator = Column(Integer, ForeignKey('users.id'))
-  book = Column(Integer, ForeignKey('books.id'))
-  book_name = Column(String)
+  creator_id = Column(Integer, ForeignKey('users.id'))
+  book_id = Column(Integer, ForeignKey('books.id'))
 
   def __init__(self, session, value, creator, book):
     book_db = session.query(Book).filter(Book.id == book).one()
 
     # Check to see if user has rated this book already.
-    old_rating = session.query(Rating).filter(Rating.creator == creator).filter(Rating.book == book)
+    # TODO fix
+    old_rating = session.query(Rating).filter(Rating.creator_id == creator).filter(Rating.book_id == book)
 
     if old_rating.count() > 0:
       old_rating = old_rating.one()
@@ -96,24 +95,26 @@ class Rating(Base):
       return
 
     self.value = value
-    self.creator = creator
-    self.book = book
+    self.creator_id = creator
+    self.book_id = book
     book_db.stars += value
     book_db.votes += 1
     book_db.calculate_rating()
-    self.book_name = book_db.name
+
+  def book_name(self):
+    return self.book.name
 
   def nice_repr(self, session):
     """A human readable representation of the Rating. We separate nice_repr and
     __repr because we may not want to keep hitting the db when we
     querying for __repr__."""
     
-    creator_db = session.query(User).filter(User.id == self.creator).one()
-    book_db = session.query(Book).filter(Book.id == self.book).one()
+    creator_db = session.query(User).filter(User.id == self.creator_id).one()
+    book_db = session.query(Book).filter(Book.id == self.book.id).one()
 
     return "User %s rated book %s a %f" % \
       (creator_db.full_name, book_db.name, self.value)
     print "Created by %s" % creator_db.full_name
 
   def __repr__(self):
-    return "User %d rated book %d a %d." % (self.creator, self.book, self.value)
+    return "User %d rated book %d a %d." % (self.creator_id, self.book, self.value)
