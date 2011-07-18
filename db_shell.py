@@ -123,7 +123,12 @@ methods = [f for f in dir(DBShell) if "__" not in f]
 # Add all public methods to globals for shell convenience.
 for method in methods:
   globals()[method] = getattr(d, method)
-
+  
+  for x in xrange(1, len(method)):
+    snipped = method[:x]
+    if snipped not in globals():
+      globals()[snipped] = getattr(d, method)
+  
   help_text += make_bold(method) + "%s\n" % ((getattr(d, method).__doc__))
 
 def commands():
