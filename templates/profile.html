@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  Sup, {{ current_user.first_name() }}? 
-
-  {% if your_profile %}
-    This is your profile page.
-  {% else %}
-    This is {{ profile_user.first_name() }}'s profile page.
-  {% end %}
-
-  {{ user = profile_user }}
-
-  {% for rating in ratings %}
-    {% include "rating_in_list.html" %}
-  {% end %}
+<div id="content">
+	<div class="wrapper">
+		<h1>{{ current_user.full_name }}</h1>
+		
+		{% if ratings %}
+			<ul>
+			{% for rating in ratings %}
+				{% include "rating_list_item.html" %}
+			{% end %}
+			</ul>
+		{% end %}
+	</div>
+</div>
 {% end %}

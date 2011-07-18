@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {{ book }}
+<div id="content" class="pop-out">
+	<div class="wrapper">
+		<h1>{{ book.name }}</h1>
+		<p class="rating">{{ book.rating }}</p>
+	</div>
+</div>
 {% end %}

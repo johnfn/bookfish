@@ -1,11 +1,14 @@
-<!-- <li><img class="left" src="http://ecx.images-amazon.com/images/I/51ynI7I-qnL._AA115_.jpg"/><h2><a href="">Herple Pottle</a></h2>J.K. Rowling <a href="/labels/bestseller" class="label rounded-corners">Bestseller</a></li> -->
-
 <li>
-  <img class="left" src="http://ecx.images-amazon.com/images/I/51ynI7I-qnL._AA115_.jpg"/>
-  <h2><a href="{{ book.get_url() }}">{{ book.name }}</a></h2> {{ book.rating }}/5 by {{ book.author }}. 
+  <img class="left" src="http://ecx.images-amazon.com/images/I/51ynI7I-qnL._AA115_.jpg" alt=""/>
+  <h2><a href="{{ book.get_url() }}">{{ book.name }}</a></h2>
   
-  Rate: 
+  <p>By {{ book.author }}</p>
+  
+  <p>{{ book.rating }}/5</p>
+  
+  <p>Rate:
   {% for x in [y / 2.0 for y in range(0, 11)] %}
     <a href="{{ book.get_rating_url(x) }}">{{ x }}</a>
   {% end %}
+  </p>
 </li>

@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>{% block title %}{% end %}Bookfish</title>
-	<meta charset="utf-8"/>
-  <script src="{{ static_url("js/live.js") }}"> </script>
-	<link rel="stylesheet" href="{{ static_url("css/page.css") }}" type="text/css" media="screen"/>
-	{% block head %}{% end %}
+    <title>{% block title %}{% end %}Bookfish</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="{{ static_url("css/page.css") }}" type="text/css" media="screen"/>
+    {% block head %}{% end %}
 </head>
 <body>
-	<div id="nav">
-		<div class="wrapper clearfix">
-			<div class="logo"><a href="/">Bookfish</a></div>
-			<ul class="nav-list">
-				<li><a class="rounded-corners" href="/">Home</a></li>
-				{% if current_user %}
-				<li><a class="rounded-corners" href="/browse-books">Browse books</a></li>
-				{% end %}
-				<li><a class="rounded-corners" href="/top-10">Top 10 books</a></li>
-				{% if current_user %}
-				<li><a class="rounded-corners" href="/logout">Log out?</a></li>
-				<li>Hello, {{ current_user }}.</li>
-				{% else %}
-				<li><a class="rounded-corners" href="/login">Log in</a></li>
-				{% end %}
-			</ul>
-		</div>
-	</div>
-	{% block content %}{% end %}
-	<div id="footer">
-		<div class="wrapper thirds clearfix">
-			<div class="third">
-				<h4>Stuff</h4>
-				<ul>
-					<li>Recent history</li>
-					<li>Similar items</li>
-					<li>"Get to know us" == PR/jobs?</li>
-				</ul>
-			</div>
-			<div class="third">
-				<h4>Recent History</h4>
-				<ul>
-					<li>Rated 3/5 on Harry Potter and the Deathly Hallows</li>
-					<li>Commented on a review of Harry Potter and the Herply Derply</li>
-					<li>Reviewed Harry Potter and the Deathly Hallows</li>
-				</ul>
-			</div>
-			<div class="third last">
-				<h4>Stuff</h4>
-				<ul>
-					<li>Recent history</li>
-					<li>Similar items</li>
-					<li>"Get to know us" == PR/jobs?</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <div id="nav">
+        <div class="wrapper clearfix">
+            <div class="logo"><a href="/">Bookfish</a></div>
+            <ul class="nav-list">
+                <li><a class="rounded-corners" href="/">Home</a></li>
+                {% if current_user %}
+                <li><a class="rounded-corners" href="/browse-books">Browse books</a></li>
+                {% end %}
+                <li><a class="rounded-corners" href="/top-10">Top 10 books</a></li>
+                {% if current_user %}
+                <li><a class="rounded-corners" href="/logout">Log out?</a></li>
+                <li>Hello, {{ current_user }}.</li>
+                {% else %}
+                <li><a class="rounded-corners" href="/login">Log in</a></li>
+                {% end %}
+            </ul>
+        </div>
+    </div>
+    {% block content %}{% end %}
+    <div id="footer">
+        <div class="wrapper thirds clearfix">
+            <div class="third">
+                <h4>Stuff</h4>
+                <ul>
+                    <li>Recent history</li>
+                    <li>Similar items</li>
+                    <li>"Get to know us" == PR/jobs?</li>
+                </ul>
+            </div>
+            <div class="third">
+                <h4>Recent History</h4>
+                <ul>
+                    <li>Rated 3/5 on Harry Potter and the Deathly Hallows</li>
+                    <li>Commented on a review of Harry Potter and the Herply Derply</li>
+                    <li>Reviewed Harry Potter and the Deathly Hallows</li>
+                </ul>
+            </div>
+            <div class="third last">
+                <h4>Stuff</h4>
+                <ul>
+                    <li>Recent history</li>
+                    <li>Similar items</li>
+                    <li>"Get to know us" == PR/jobs?</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
