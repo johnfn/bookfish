@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content">
-	<div class="wrapper">
-		<h1>{{ current_user.full_name }}</h1>
-		
-		{% if ratings %}
-			<ul>
-			{% for rating in ratings %}
-				{% include "rating_list_item.html" %}
-			{% end %}
-			</ul>
-		{% end %}
-	</div>
-</div>
+<h1>{{ current_user.full_name }}</h1>
+
+<h2>Recommended books for you</h2>
+
+<p>Horizontal list of books</p>
+
+{% if ratings %}
+	<ul>
+	{% for rating in ratings %}
+		{% include "rating_list_item.html" %}
+	{% end %}
+	</ul>
+{% end %}
 {% end %}

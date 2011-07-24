@@ -12,13 +12,18 @@ Add a book:
 	<input type="submit" value="submit" />
 </form>
 
+<div class="half-width center center-block">
+  <h1>Rate books <span class="amp">&amp;</span> get book recommendations.</h1>
+  <p class="wide-margin"><a class="fancy-button" href="login">Sign in with Google.</a></p>
+</div>
+
 {% end %}
 
 {% block content %}
-<div id="content" class="pop-out">
-	<div class="wrapper home">
-		<h1>Rate books <span class="amp">&amp;</span> get book recommendations.</h1>
-    <p class="wide-margin"><a class="fancy-button rounded-corners half-width center-block" href="login">Sign in with Google.</a></p>
-	</div>
+<div class="home">
+  <h1>Enter a book you love:</h1>
+  <form action="">
+    <input type="text"/>
+  </form>
 </div>
 {% end %}

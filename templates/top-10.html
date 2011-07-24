@@ -1,14 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content">
-    <div class="wrapper">
-        <h1>Top 10 books</h1>
-        <ol class="big-list">
-            {% for book in top_ten_books %}
-                {% include "book_in_list.html" %}
-            {% end %}
-        </ol>
-    </div>
-</div>
+<h1>Top 10 books</h1>
+<ol class="big-list">
+  {% for book in top_ten_books %}
+    {% include "book_in_list.html" %}
+  {% end %}
+</ol>
 {% end %}
